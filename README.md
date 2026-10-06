@@ -1,4 +1,4 @@
-# @zenland-dev/n8n-nodes-crmcalls
+# n8n-nodes-crmcalls
 
 An n8n community node for [CRMCalls](https://cc.crmcalls.ru), a Russian call center with auto-dial
 projects. 14 operations across 8 resources, covering every route of the CRMCalls REST API v1:
@@ -9,9 +9,9 @@ users.
 Written from scratch against the API documentation in the CRMCalls account (Интеграции → API →
 Документация, read on 06.10.2026). No code from any other package.
 
-**Status: 0.1.0.** Every read ran against a live CRMCalls account on 06.10.2026; creating and
-importing contacts did not yet. See [What was checked](#what-was-checked). Where the documentation is
-silent, this README says what the API answered, or that nobody knows.
+**Status: 0.1.1.** Every read, creating and updating a contact, and an import without a project ran
+against a live CRMCalls account on 06.10.2026. See [What was checked](#what-was-checked). Where the
+documentation is silent, this README says what the API answered, or that nobody knows.
 
 - [Installation](#installation)
 - [Credentials](#credentials)
@@ -23,13 +23,13 @@ silent, this README says what the API answered, or that nobody knows.
 
 ## Installation
 
-In n8n: **Settings → Community Nodes → Install**, package name `@zenland-dev/n8n-nodes-crmcalls`.
+In n8n: **Settings → Community Nodes → Install**, package name `n8n-nodes-crmcalls`.
 
 For a self-hosted instance without the UI installer:
 
 ```bash
 cd ~/.n8n/nodes
-npm install @zenland-dev/n8n-nodes-crmcalls
+npm install n8n-nodes-crmcalls
 ```
 
 and restart n8n.
@@ -71,12 +71,16 @@ what is inside, one item per row for lists.
 
 ### Contact → Create or Update
 
-For a single lead, such as a site form: the answer comes at once, with the whole contact and
-`processing_status` (`created`, `updated` or `skipped`).
+For a single lead, such as a site form: the answer comes at once, with the whole contact,
+`processing_status` (`created`, `updated` or `skipped`) and `warnings`, a key the documentation does
+not mention.
 
 **Phones** is required: one or more numbers separated by commas, in any format, or an array from an
 expression. The first is the main one. At least one has to be a valid Russian number, otherwise
-CRMCalls answers `422 validation_error` and the node shows the reason it gave for `phones`.
+CRMCalls answers `422 validation_error` and the node shows the reason it gave, e.g.
+`phones: Некорректный номер телефона`. CRMCalls stores numbers as `7XXXXXXXXXX`: ten digits without
+the country code came back with a `7` in front, and the phone filter of Get Many found the contact
+by the same number written with `+7`, brackets and dashes as well.
 
 CRMCalls looks for an existing contact by **External ID** first, then by phone. **If the Contact
 Exists**:
@@ -100,7 +104,7 @@ Sends **all input items as one bulk import**. CRMCalls queues it and answers `20
 - Up to 100,000 contacts per import and one import per key every 30 seconds. A larger input is
   split, and the node waits out the `retry_after` CRMCalls answers between the parts.
 - A row without a single valid phone is not created and counts in `invalid_count`; the rest of the
-  import goes on.
+  import goes on, and the import ends `completed_with_errors` rather than `completed`.
 - **Wait for Completion** (on by default) checks the import every 3 to 5 seconds and outputs the final
   counts: `created_count`, `updated_count`, `skipped_count`, `invalid_count`. When **Wait Timeout**
   runs out first (120 seconds by default), the node outputs the state the import is in, `queued` or
@@ -290,8 +294,20 @@ answer and never its data:
 - errors: an unknown import, contact or scenario (`404 not_found`), an unknown project status
   (`400 validation_error` with `details.status`), an unknown key (`401 unauthorized`).
 
-Not run yet: Create or Update, Import and Get Import Status, which write to the account, and with
-them the sending of custom field values. Those follow the documentation.
+Writes, on the same day, through the node itself, on a test number, with a guard that refused any
+other number, a project, a responsible user or Create a New One mode:
+
+- Create or Update: created in Update mode, updated by a second call with the same External ID (an
+  empty name kept the name, a new city was added), Leave It Unchanged answered `skipped` and kept
+  everything, an invalid number answered `422` naming `phones`;
+- Get by ID, and Get Many by External ID, by phone in another format and by tag;
+- Import of two rows, the test contact and an invalid number, waited for: `completed_with_errors`,
+  1 updated, 1 invalid, 0 created; row tags and import tags both on the contact; Get Import Status;
+  Get Many by import ID.
+
+Not run: an import into a project, since its contacts are called at once; Create a New One mode,
+since the duplicates cannot be deleted through the API; and custom field values. Those follow the
+documentation.
 
 ## License
 

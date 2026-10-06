@@ -1,7 +1,7 @@
 {
-	"name": "@zenland-dev/n8n-nodes-crmcalls",
-	"version": "0.1.0",
-	"description": "CRMCalls node for n8n: create and update contacts, bulk-load them into the call center or straight into an auto-dial project, and read calls, scenarios, call results, projects, custom fields, tags and users",
+	"name": "n8n-nodes-crmcalls",
+	"version": "0.1.1",
+	"description": "CRMCalls node for n8n: create and update contacts, bulk-load them into the call center or straight into an auto-dial project, read calls and download their recordings, and read scenarios, call results, projects, custom fields, tags and users",
 	"keywords": [
 		"n8n-community-node-package",
 		"n8n",
