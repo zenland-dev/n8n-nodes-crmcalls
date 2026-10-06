@@ -1,0 +1,36 @@
+{
+	"node": "@zenland-dev/n8n-nodes-crmcalls.crmCalls",
+	"nodeVersion": "1.0",
+	"codexVersion": "1.0",
+	"categories": ["Communication", "Sales"],
+	"resources": {
+		"credentialDocumentation": [
+			{
+				"url": "https://github.com/zenland-dev/n8n-nodes-crmcalls?tab=readme-ov-file#credentials"
+			}
+		],
+		"primaryDocumentation": [
+			{
+				"url": "https://github.com/zenland-dev/n8n-nodes-crmcalls?tab=readme-ov-file#crmcalls-node"
+			}
+		]
+	},
+	"alias": [
+		"CRMCalls",
+		"CRM Calls",
+		"КРМ Колс",
+		"Call Center",
+		"Колл-центр",
+		"Auto Dialer",
+		"Автообзвон",
+		"Обзвон",
+		"Lead",
+		"Лид",
+		"Contact",
+		"Контакт",
+		"Call",
+		"Звонок",
+		"Telephony",
+		"Телефония"
+	]
+}

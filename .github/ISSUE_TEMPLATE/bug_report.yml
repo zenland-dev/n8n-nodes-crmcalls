@@ -1,0 +1,66 @@
+name: Bug report
+description: Something in the node behaves differently than documented
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: >
+        Issues here are public. Remove the API key, and strip names, phone numbers, emails,
+        contact and project IDs and recording links out of any sample before pasting it.
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What you did, what you expected, and what you got instead.
+    validations:
+      required: true
+
+  - type: input
+    id: versions
+    attributes:
+      label: Versions
+      description: The n8n version and the version of this package.
+      placeholder: "n8n 2.3.1, @zenland-dev/n8n-nodes-crmcalls 0.1.0"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: resource
+    attributes:
+      label: Resource
+      options:
+        - Contact
+        - Call
+        - Scenario
+        - Project
+        - Custom Field
+        - Tag
+        - User
+        - Custom Request
+    validations:
+      required: true
+
+  - type: input
+    id: operation
+    attributes:
+      label: Operation
+      placeholder: "Import"
+
+  - type: textarea
+    id: response
+    attributes:
+      label: What CRMCalls answered
+      description: >
+        The error text the node showed, with the code in square brackets, e.g.
+        "CRMCalls POST /api/v1/contacts: Некорректные данные [validation_error]", and the
+        details line under it. For an import, the state and counts from Get Import Status.
+      render: text
+
+  - type: textarea
+    id: extra
+    attributes:
+      label: Anything else
+      description: >
+        For custom fields: the field type (text, number, date, datetime, select, url, boolean)
+        and the value you sent, with personal data removed.
